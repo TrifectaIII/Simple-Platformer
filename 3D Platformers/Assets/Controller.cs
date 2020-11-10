@@ -48,16 +48,20 @@ public class Controller : MonoBehaviour
 			
 			moveDirect.y = 0; 
 			moveDirect = moveDirect.normalized * dashspeed;
-			float angle = Mathf.Rad2Deg*Mathf.Atan2(moveDirect.x, moveDirect.z) + 180;
-			shape.rotation = new Vector3(0f,angle,0f);
-			transform.rotation = Quaternion.Euler(moveDirect.x,0,moveDirect.z);
+			// float angle = Mathf.Rad2Deg*Mathf.Atan2(moveDirect.x, moveDirect.z) + 180;
+			// shape.rotation = new Vector3(0f,angle,0f);
+			// transform.rotation = Quaternion.Euler(moveDirect.x,0,moveDirect.z);
 			Vector3 angles = transform.eulerAngles;
-			angles.y += 90;
+			angles.x = 30;
 			transform.eulerAngles = angles; 
-			transform.Rotate(90 * Vector3.up);
+            Vector3 particleAngles = shape.rotation;
+            particleAngles.x = 30;
+            shape.rotation = particleAngles;
+			// transform.Rotate(90 * Vector3.up);
 		}
 		else
 		{
+
 			float moveDirectY = moveDirect.y;
 			moveDirect = new Vector3(Input.GetAxis("Horizontal") * speed, 0.0f, Input.GetAxis("Vertical") * speed);
 			moveDirect = camera.TransformDirection(moveDirect);
@@ -77,7 +81,9 @@ public class Controller : MonoBehaviour
 		  moveDirect.y = jumpStren;
 		  StopDash();
 		}
-
+        Vector3 eangles = transform.eulerAngles;
+        eangles.y = Mathf.Atan2(moveDirect.x, moveDirect.z) * Mathf.Rad2Deg;
+        transform.eulerAngles = eangles;
 		cc.Move(moveDirect * Time.deltaTime);
 		
     }
@@ -93,6 +99,9 @@ public class Controller : MonoBehaviour
 	{	
 		dashing = false;
 		particles.Stop();
-		transform.rotation = Quaternion.Euler(0,0,0);
+		transform.rotation = Quaternion.Euler(0,transform.rotation.y,transform.rotation.z);
+        Vector3 particleAngles = shape.rotation;
+        particleAngles.x = 0;
+        shape.rotation = particleAngles;
 	}
 }
